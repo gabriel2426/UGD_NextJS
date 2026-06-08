@@ -133,9 +133,24 @@ export default function CargoTable({ records, activeEditId }: { records: CargoRe
                 </div>
               </div>
 
-              <div className="mb-3 flex items-center justify-between rounded-xl border border-cyan-400/10 bg-cyan-400/5 px-3 py-2">
+              <div className="mb-2 flex items-center justify-between rounded-xl border border-cyan-400/10 bg-cyan-400/5 px-3 py-2">
                 <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500">Harga</span>
                 <span className="font-mono text-sm font-semibold tracking-wider text-cyan-300">{formatCurrency(record.shippingPrice)}</span>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-white/5 bg-slate-950/30 px-2 py-1.5">
+                  <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">Status Barang</p>
+                  <p className={`mt-0.5 font-mono text-[10px] font-medium ${record.itemStatus === 'Selesai' || record.itemStatus === 'Sampai Tujuan' ? 'text-emerald-400' : 'text-amber-300'}`}>
+                    {record.itemStatus || '-'}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-white/5 bg-slate-950/30 px-2 py-1.5">
+                  <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">Transaksi</p>
+                  <p className={`mt-0.5 font-mono text-[10px] font-medium ${record.transactionStatus === 'Lunas' ? 'text-emerald-400' : record.transactionStatus === 'Refund' ? 'text-rose-400' : 'text-amber-300'}`}>
+                    {record.transactionStatus || '-'}
+                  </p>
+                </div>
               </div>
 
               {record.description && (

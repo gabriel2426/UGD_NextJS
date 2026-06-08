@@ -78,6 +78,7 @@ function buildFormDataFromRecord(record: CargoRecord): CargoFormData {
     itemName: record.itemName,
     itemType: record.itemType,
     itemWeightKg: String(record.itemWeightKg),
+    itemPrice: String(record.itemPrice ?? 0),
     shippingPrice: String(record.shippingPrice),
     transportMode: record.transportMode,
     deliveryType: record.deliveryType,

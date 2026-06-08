@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -11,6 +11,23 @@ export default function LoginPage() {
   const [status, setStatus] = useState("WAITING FOR INPUT...");
   const [statusColor, setStatusColor] = useState("#a855f7");
   const [error, setError] = useState("");
+
+  // Check existing session and redirect
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then((res) => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then((data) => {
+        if (data?.user?.homePath) {
+          router.replace(data.user.homePath);
+        }
+      })
+      .catch(() => {
+        // no session, stay on login page
+      });
+  }, [router]);
 
   const handleConnect = async () => {
     if (connecting) return;

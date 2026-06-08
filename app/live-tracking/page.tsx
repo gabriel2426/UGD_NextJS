@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import PrimeTopbar from "../ui/PrimeTopbar";
 
 type Vessel = {
   id: string;

@@ -28,6 +28,8 @@ const createFieldNames = [
 const updateFieldNames = [
   "id",
   "shipmentStatus",
+  "itemStatus",
+  "transactionStatus",
   "shippingPrice",
   "description",
 ] as const;
@@ -37,12 +39,10 @@ function pickFormValues(
   fields: readonly string[],
 ): Record<string, string> {
   const payload: Record<string, string> = {};
-
   for (const field of fields) {
     const value = formData.get(field);
     payload[field] = typeof value === "string" ? value : "";
   }
-
   return payload;
 }
 
@@ -113,7 +113,7 @@ export async function updateCargoAction(
     revalidateAdminPages();
     return {
       success: true,
-      message: "Status dan harga cargo berhasil diperbarui.",
+      message: "Status cargo, barang, dan transaksi berhasil diperbarui.",
       fieldErrors: {},
     };
   } catch (error) {

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getSql } from "@/app/lib/db";
 import {
   deliveryTypeOptions,
+  itemStatusOptions,
   shipmentStatusOptions,
   type CargoFormData,
   type CargoRecord,
@@ -36,9 +37,10 @@ const cargoCreateSchema = z.object({
 
 const cargoQuickUpdateSchema = z.object({
   shipmentStatus: z.enum(shipmentStatusOptions),
+  itemStatus: z.enum(itemStatusOptions).default("Siap Kirim"),
+  transactionStatus: z.string().trim().default("Belum Dibayar"),
   shippingPrice: z.coerce.number().nonnegative("Harga atau tarif tidak boleh negatif."),
   description: z.string().trim().default(""),
-  transactionStatus: z.string().trim().default("Belum Dibayar"),
 });
 
 export type AdminCargoCreateInput = z.infer<typeof cargoCreateSchema>;
@@ -512,6 +514,7 @@ export async function updateAdminCargoRecord(
         UPDATE barang
         SET
           status_pengiriman = ${data.shipmentStatus},
+          status_barang = ${data.itemStatus},
           deskripsi = ${data.description},
           updated_at = NOW()
         WHERE id = ${id}
