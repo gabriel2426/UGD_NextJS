@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [id, setId] = useState("");
   const [key, setKey] = useState("");
   const [sync, setSync] = useState(false);
@@ -12,22 +14,13 @@ export default function LoginPage() {
   const [statusColor, setStatusColor] = useState("#a855f7");
   const [error, setError] = useState("");
 
-  // Check existing session and redirect
-  useEffect(() => {
-    fetch("/api/auth/session")
-      .then((res) => {
-        if (res.ok) return res.json();
-        return null;
-      })
-      .then((data) => {
-        if (data?.user?.homePath) {
-          router.replace(data.user.homePath);
-        }
-      })
-      .catch(() => {
-        // no session, stay on login page
-      });
-  }, [router]);
+  // Tampilkan warning jika user dicegat dari halaman terproteksi
+  const callbackUrl = searchParams.get("callbackUrl");
+  const [accessWarning] = useState<string>(
+    callbackUrl
+      ? `AKSES DITOLAK — Anda harus login terlebih dahulu untuk mengakses "${callbackUrl}".`
+      : "",
+  );
 
   const handleConnect = async () => {
     if (connecting) return;
@@ -63,7 +56,7 @@ export default function LoginPage() {
       setStatusColor("#22c55e");
 
       const homePath = data.user?.homePath ?? "/admin";
-      setTimeout(() => router.push(homePath), 1500);
+      setTimeout(() => router.push(callbackUrl && callbackUrl.startsWith("/") ? callbackUrl : homePath), 1500);
     } catch {
       setConnecting(false);
       setError("NETWORK ERROR — UNABLE TO REACH AUTHENTICATION SERVER");
@@ -197,6 +190,27 @@ export default function LoginPage() {
             <div className="modal-title">SECURE ACCESS PORTAL</div>
             <div className="modal-sub">Classified intelligence access. Verify credentials.</div>
 
+            {accessWarning && (
+              <div style={{
+                marginBottom: "16px",
+                padding: "10px 14px",
+                background: "rgba(239,68,68,0.10)",
+                border: "1px solid rgba(239,68,68,0.35)",
+                borderRadius: "4px",
+              }}>
+                <span style={{
+                  fontFamily: "'Share Tech Mono', monospace",
+                  fontSize: "9px",
+                  color: "#f87171",
+                  letterSpacing: "0.12em",
+                  lineHeight: 1.6,
+                  display: "block",
+                }}>
+                  ⚠ {accessWarning}
+                </span>
+              </div>
+            )}
+
             <div className="field">
               <span className="field-label">USER ID</span>
               <div className="input-wrap">
@@ -271,5 +285,13 @@ export default function LoginPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginPageInner />
+    </Suspense>
   );
 }

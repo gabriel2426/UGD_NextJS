@@ -251,6 +251,11 @@ export async function ensureAdminCargoSchema() {
   await sql`
     CREATE INDEX IF NOT EXISTS barang_nama_barang_idx ON barang (nama_barang)
   `;
+
+  // Hapus kolom vessel_id jika masih ada (cleanup)
+  await sql`
+    ALTER TABLE barang DROP COLUMN IF EXISTS vessel_id
+  `;
 }
 
 export async function fetchAdminCargoRecords(query = "") {
