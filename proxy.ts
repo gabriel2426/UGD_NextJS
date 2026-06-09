@@ -1,18 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Routes yang butuh autentikasi (tanpa login tidak bisa akses via URL bar)
-const PROTECTED_PREFIXES = [
-  "/admin",
-  "/dashboard",
-  "/fleet",
-  "/analytics",
-  "/live-tracking",
-  "/logistic-optimization",
-  "/map",
-  "/profile",
-  "/vessel-deployment",
-];
+// Halaman yang BOLEH diakses tanpa login
+const PUBLIC_PATHS = new Set(["/login"]);
 
 // Cookie session name
 const SESSION_COOKIE = "serena_sail_session";
@@ -20,16 +10,17 @@ const SESSION_COOKIE = "serena_sail_session";
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Cek apakah route butuh proteksi
-  const needsAuth = PROTECTED_PREFIXES.some((prefix) =>
-    pathname.startsWith(prefix),
-  );
-
-  if (!needsAuth) {
+  // Izinkan akses ke halaman publik (login)
+  if (PUBLIC_PATHS.has(pathname)) {
     return NextResponse.next();
   }
 
-  // Cek cookie session
+  // Izinkan akses ke API routes (ditangani oleh auth di route handler masing-masing)
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
+  // Cek cookie session untuk semua halaman lainnya
   const sessionCookie = request.cookies.get(SESSION_COOKIE);
 
   if (!sessionCookie?.value) {
@@ -44,6 +35,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.css|.*\\.js).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.ico|.*\\.webp).*)",
   ],
 };
