@@ -1,5 +1,7 @@
 "use client";
 import { useRouter, usePathname } from "next/navigation";
+import LogoutModal from "@/app/ui/LogoutModal";
+import SecurityBanner from "@/app/ui/SecurityBanner";
 // Import data dummy
 import { dummyAdmins } from "../lib/placeholder-data";
 
@@ -18,13 +20,15 @@ export default function SereneSailTopbar() {
   ];
 
   return (
-    <div style={{
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      height: 48, padding: "0 24px", background: "rgba(10, 10, 20, 0.95)",
-      borderBottom: "1px solid rgba(168, 85, 247, 0.2)",
-      position: "sticky", top: 0, zIndex: 1000,
-      backdropFilter: "blur(10px)",
-    }}>
+    <div>
+      <SecurityBanner role="admin" />
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        height: 48, padding: "0 24px", background: "rgba(10, 10, 20, 0.95)",
+        borderBottom: "1px solid rgba(168, 85, 247, 0.2)",
+        position: "sticky", top: 0, zIndex: 1000,
+        backdropFilter: "blur(10px)",
+      }}>
       <style>{`
         .nav-btn:hover { color: #fff !important; }
         .nav-btn::after {
@@ -102,26 +106,9 @@ export default function SereneSailTopbar() {
         </div>
 
         {/* Logout Button */}
-        <div 
-          onClick={() => { if(confirm("TERMINATE ADMIN SESSION?")) router.push("/login"); }}
-          title="Logout"
-          style={{ 
-            display: "flex", alignItems: "center", justifyContent: "center", 
-            width: 32, height: 32, cursor: "pointer", color: "#f43f5e", 
-            borderRadius: "50%", border: "1px solid rgba(244, 63, 94, 0.2)",
-            background: "rgba(244, 63, 94, 0.05)", transition: "all 0.2s"
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = "rgba(244, 63, 94, 0.15)"}
-          onMouseLeave={(e) => e.currentTarget.style.background = "rgba(244, 63, 94, 0.05)"}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-        </div>
+        <LogoutModal variant="rose" />
 
-        {/* User Profile Avatar (Menggunakan Initial dari Dummy Data) */}
+        {/* User Profile Avatar */}
         <div
           title={`Logged in as ${currentAdmin.name}`}
           style={{
@@ -136,6 +123,7 @@ export default function SereneSailTopbar() {
           {currentAdmin.avatar}
         </div>
       </div>
+    </div>
     </div>
   );
 }

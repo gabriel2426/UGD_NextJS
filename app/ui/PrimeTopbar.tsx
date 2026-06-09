@@ -1,6 +1,8 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import LogoutModal from "@/app/ui/LogoutModal";
+import SecurityBanner from "@/app/ui/SecurityBanner";
 
 // 🔍 1. Definisikan tipe data Props agar TypeScript tahu komponen ini bisa menerima fungsi onSearch
 interface PrimeTopbarProps {
@@ -47,12 +49,14 @@ export default function PrimeTopbar({ onSearch }: PrimeTopbarProps) {
   const hideSearch = path === "/fleet" || path === "/map";
 
   return (
-    <div style={{
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      height: 46, padding: "0 20px", background: "#0a0a10",
-      borderBottom: "1px solid rgba(255,255,255,0.07)",
-      position: "sticky", top: 0, zIndex: 200,
-    }}>
+    <div>
+      <SecurityBanner role="user" />
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        height: 46, padding: "0 20px", background: "#0a0a10",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
+        position: "sticky", top: 0, zIndex: 200,
+      }}>
       {/* Kolom Kiri: Logo & Navigasi */}
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span
@@ -200,31 +204,8 @@ export default function PrimeTopbar({ onSearch }: PrimeTopbarProps) {
           ))}
         </div>
 
-        {/* Tombol Logout Baru */}
-        <div 
-          onClick={() => { if(confirm("TERMINATE SESSION?")) router.push("/login"); }}
-          style={{
-            width: 28, height: 28, border: "1px solid rgba(244, 63, 94, 0.2)",
-            borderRadius: 4, background: "rgba(244, 63, 94, 0.05)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", color: "#f43f5e", transition: "all 0.2s"
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = "rgba(244, 63, 94, 0.2)";
-            e.currentTarget.style.borderColor = "#f43f5e";
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = "rgba(244, 63, 94, 0.05)";
-            e.currentTarget.style.borderColor = "rgba(244, 63, 94, 0.2)";
-          }}
-          title="Logout"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-        </div>
+        {/* Tombol Logout */}
+        <LogoutModal variant="cyan" />
 
         {/* User Avatar */}
         <div
@@ -245,6 +226,7 @@ export default function PrimeTopbar({ onSearch }: PrimeTopbarProps) {
           L
         </div>
       </div>
+    </div>
     </div>
   );
 }

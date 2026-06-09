@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Halaman yang BOLEH diakses tanpa login
-const PUBLIC_PATHS = new Set(["/login"]);
+const PUBLIC_PATHS = new Set(["/login", "/"]);
 
 // Cookie session name
 const SESSION_COOKIE = "serena_sail_session";
