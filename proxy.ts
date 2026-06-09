@@ -17,7 +17,7 @@ const PROTECTED_PREFIXES = [
 // Cookie session name
 const SESSION_COOKIE = "serena_sail_session";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Cek apakah route butuh proteksi
