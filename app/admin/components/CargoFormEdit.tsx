@@ -14,6 +14,12 @@ import {
 
 type EditFormValues = {
   id: string;
+  senderName: string;
+  recipientName: string;
+  itemName: string;
+  itemType: string;
+  originCity: string;
+  destinationCity: string;
   shipmentStatus: string;
   itemStatus: string;
   transactionStatus: string;
@@ -27,6 +33,12 @@ const inputClassName =
 function buildEditValues(record: CargoRecord): EditFormValues {
   return {
     id: String(record.id),
+    senderName: record.senderName,
+    recipientName: record.recipientName,
+    itemName: record.itemName,
+    itemType: record.itemType,
+    originCity: record.originCity,
+    destinationCity: record.destinationCity,
     shipmentStatus: record.shipmentStatus,
     itemStatus: record.itemStatus || "Siap Kirim",
     transactionStatus: record.transactionStatus || "Belum Dibayar",
@@ -48,14 +60,6 @@ function UpdateButton() {
   );
 }
 
-function readOnlyCard(label: string, value: string) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-slate-950/50 p-3">
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</p>
-      <p className="mt-2 text-sm text-slate-100">{value || "-"}</p>
-    </div>
-  );
-}
 
 function CompletionBadge({ shipmentStatus, transactionStatus }: { shipmentStatus: string; transactionStatus: string }) {
   const isShipmentDone = shipmentStatus === "Selesai" || shipmentStatus === "Sampai Tujuan";
@@ -177,12 +181,115 @@ export default function CargoFormEdit({
         </div>
       ) : null}
 
-      {/* Read-only info cards */}
+      {/* Editable fields: Pengirim, Penerima, Barang, Rute */}
       <div className="mb-4 grid gap-3 md:grid-cols-2">
-        {readOnlyCard("Pengirim", record.senderName)}
-        {readOnlyCard("Penerima", record.recipientName)}
-        {readOnlyCard("Barang", `${record.itemName} (${record.itemType})`)}
-        {readOnlyCard("Rute", `${record.originCity} → ${record.destinationCity}`)}
+        <label className="block text-sm text-slate-300">
+          Nama Pengirim
+          <input
+            className={inputClassName}
+            name="senderName"
+            onChange={(event) =>
+              setFormValues((current) =>
+                current ? { ...current, senderName: event.target.value } : current,
+              )
+            }
+            type="text"
+            value={formValues.senderName}
+          />
+          <p className="mt-1 text-xs text-rose-300">
+            {state.fieldErrors?.senderName?.[0]}
+          </p>
+        </label>
+
+        <label className="block text-sm text-slate-300">
+          Nama Penerima
+          <input
+            className={inputClassName}
+            name="recipientName"
+            onChange={(event) =>
+              setFormValues((current) =>
+                current ? { ...current, recipientName: event.target.value } : current,
+              )
+            }
+            type="text"
+            value={formValues.recipientName}
+          />
+          <p className="mt-1 text-xs text-rose-300">
+            {state.fieldErrors?.recipientName?.[0]}
+          </p>
+        </label>
+
+        <label className="block text-sm text-slate-300">
+          Nama Barang
+          <input
+            className={inputClassName}
+            name="itemName"
+            onChange={(event) =>
+              setFormValues((current) =>
+                current ? { ...current, itemName: event.target.value } : current,
+              )
+            }
+            type="text"
+            value={formValues.itemName}
+          />
+          <p className="mt-1 text-xs text-rose-300">
+            {state.fieldErrors?.itemName?.[0]}
+          </p>
+        </label>
+
+        <label className="block text-sm text-slate-300">
+          Jenis Barang
+          <input
+            className={inputClassName}
+            name="itemType"
+            onChange={(event) =>
+              setFormValues((current) =>
+                current ? { ...current, itemType: event.target.value } : current,
+              )
+            }
+            type="text"
+            value={formValues.itemType}
+          />
+          <p className="mt-1 text-xs text-rose-300">
+            {state.fieldErrors?.itemType?.[0]}
+          </p>
+        </label>
+
+        <label className="block text-sm text-slate-300">
+          Kota Asal
+          <input
+            className={inputClassName}
+            name="originCity"
+            onChange={(event) =>
+              setFormValues((current) =>
+                current ? { ...current, originCity: event.target.value } : current,
+              )
+            }
+            type="text"
+            value={formValues.originCity}
+          />
+          <p className="mt-1 text-xs text-rose-300">
+            {state.fieldErrors?.originCity?.[0]}
+          </p>
+        </label>
+
+        <label className="block text-sm text-slate-300">
+          Kota Tujuan
+          <input
+            className={inputClassName}
+            name="destinationCity"
+            onChange={(event) =>
+              setFormValues((current) =>
+                current ? { ...current, destinationCity: event.target.value } : current,
+              )
+            }
+            type="text"
+            value={formValues.destinationCity}
+          />
+          <p className="mt-1 text-xs text-rose-300">
+            {state.fieldErrors?.destinationCity?.[0]}
+          </p>
+        </label>
       </div>
 
       <input name="id" type="hidden" value={formValues.id} />

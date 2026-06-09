@@ -27,6 +27,12 @@ const createFieldNames = [
 
 const updateFieldNames = [
   "id",
+  "senderName",
+  "recipientName",
+  "itemName",
+  "itemType",
+  "originCity",
+  "destinationCity",
   "shipmentStatus",
   "itemStatus",
   "transactionStatus",

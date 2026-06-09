@@ -36,6 +36,12 @@ const cargoCreateSchema = z.object({
 });
 
 const cargoQuickUpdateSchema = z.object({
+  senderName: z.string().trim().min(2, "Nama pengirim wajib diisi."),
+  recipientName: z.string().trim().min(2, "Nama penerima wajib diisi."),
+  itemName: z.string().trim().min(2, "Nama barang wajib diisi."),
+  itemType: z.string().trim().min(2, "Jenis barang wajib diisi."),
+  originCity: z.string().trim().min(2, "Kota asal wajib diisi."),
+  destinationCity: z.string().trim().min(2, "Kota tujuan wajib diisi."),
   shipmentStatus: z.enum(shipmentStatusOptions),
   itemStatus: z.enum(itemStatusOptions).default("Siap Kirim"),
   transactionStatus: z.string().trim().default("Belum Dibayar"),
@@ -513,6 +519,12 @@ export async function updateAdminCargoRecord(
       await transactionSql`
         UPDATE barang
         SET
+          nama_pengirim = ${data.senderName},
+          nama_penerima = ${data.recipientName},
+          nama_barang = ${data.itemName},
+          jenis_barang = ${data.itemType},
+          kota_asal = ${data.originCity},
+          kota_tujuan = ${data.destinationCity},
           status_pengiriman = ${data.shipmentStatus},
           status_barang = ${data.itemStatus},
           deskripsi = ${data.description},

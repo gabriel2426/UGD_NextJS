@@ -2,7 +2,17 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Routes yang butuh autentikasi (tanpa login tidak bisa akses via URL bar)
-const PROTECTED_PREFIXES = ["/admin", "/dashboard", "/fleet", "/analytics", "/live-tracking", "/logistic-optimization", "/map", "/profile", "/vessel-deployment"];
+const PROTECTED_PREFIXES = [
+  "/admin",
+  "/dashboard",
+  "/fleet",
+  "/analytics",
+  "/live-tracking",
+  "/logistic-optimization",
+  "/map",
+  "/profile",
+  "/vessel-deployment",
+];
 
 // Cookie session name
 const SESSION_COOKIE = "serena_sail_session";
@@ -11,7 +21,9 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Cek apakah route butuh proteksi
-  const needsAuth = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  const needsAuth = PROTECTED_PREFIXES.some((prefix) =>
+    pathname.startsWith(prefix),
+  );
 
   if (!needsAuth) {
     return NextResponse.next();
